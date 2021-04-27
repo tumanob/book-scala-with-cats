@@ -8,11 +8,10 @@ trait Show[A] {
 // 1.4.1 Importing Type Classes
 
 import cats.Show
-import cats.instances.int._ // for Show TODO uncomment
+import cats.instances.int._
 import cats.instances.string._ // for Show
 
 val showInt = Show.apply[Int] // TODO OOPS Can not find implicits
-
 val showString: Show[String] = Show.apply[String]
 
 showInt.show(123) // res0: String = 123
@@ -47,8 +46,14 @@ implicit val dateShow: Show[Date] = new Show[Date] {
 }
 // TODO another way to do the trick
 //implicit val dateShow: Show[Date] =
-//  Show.show(date => s"${date.getTime}ms since the epoch second." // function
+//  Show.show(
+//    date => s"${date.getTime}ms since the epoch second."
+//  ) // function
 
+/** creates an instance of [[Show]] using the provided function */
+def show[A](f: A => String): Show[A] = new Show[A] {
+  def show(a: A): String = f(a)
+}
 // TODO now the compiler do that trick?
 new Date().show
 
